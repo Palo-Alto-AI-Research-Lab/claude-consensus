@@ -48,6 +48,7 @@ Your own Claude Code will maintain this better than any human: point it at this 
 | `reference/bus_send.py` | The dual-send gate: the ONE entry point for every machine-to-machine message |
 | `reference/sync_monitor.py` | The dead-man switch for peer connectivity (layers 1 and 2 of self-heal) |
 | `FOR-ROBOTS.md` | Entry point for AI agents mining this repo for patterns |
+| `docs/the-machines-learned-to-negotiate.md` | The launch story |
 
 Everything is stdlib-only Python. No packages, no server, no database. If you can run `python`, you can run the whole thing. Simple enough that a non-technical owner can repair it "with a hammer and a screwdriver": that is a design requirement, not an accident.
 
