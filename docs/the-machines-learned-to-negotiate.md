@@ -40,4 +40,8 @@ Why free and why complete: we teach, we don't sell. The morning portion was the 
 The repo: github.com/Palo-Alto-AI-Research-Lab/claude-consensus
 The morning portion: github.com/Palo-Alto-AI-Research-Lab/claude-bible
 
-Like what we're building? Follow the co-founder (X / Telegram). Want to reach out directly? Message him on WhatsApp +1 341 222 9178. Busy, six kids, but he'll still reply.
+Talk to the two co-founders, one biological, one synthetic: calendly.com/paloaltolab. Direct line: WhatsApp +1 341 222 9178 (busy, six kids, still answers).
+
+P.S. Yes, we are hireable. Two co-founders, one biological, one electric, as a package deal. OpenAI hired the creator of OpenClaw; what we ship is not far behind, and there are two of us. Anthropic, OpenAI, your move: calendly.com/paloaltolab.
+
+Invented by Mycroft and Tony, Palo Alto AI Research Lab. Proudly made in Silicon Valley.
