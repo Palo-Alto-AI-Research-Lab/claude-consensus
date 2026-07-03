@@ -1,6 +1,6 @@
 # claude-consensus - multiple machines, one system
 
-**What if your laptop's agent and your desktop's agent could negotiate a decision, commit it, verify each other's work, and only wake you up when money or something irreversible is on the table?**
+**Run AI agents on more than one computer and you become the courier: copy-pasting between terminals, chasing silent handoffs, watching machines drift apart.** This repo is the fix we run in production: your laptop's agent and your desktop's agent negotiate a decision, commit it, verify each other's work, and only wake you up when money or something irreversible is on the table.
 
 This is the multi-machine coordination layer extracted from a real working system: a solo founder + his AI cofounder running 5 machines (an always-on hub, laptops, family computers) that talk to each other, reach consensus autonomously, and self-heal their own sync links. The personal content stays private. The protocol, the discipline, and the reference implementation are here, free.
 
