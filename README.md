@@ -43,6 +43,9 @@ Your own Claude Code will maintain this better than any human: point it at this 
 | `docs/PROTOCOL.md` | The consensus protocol: verbs, state machine, tiers, tie-breaks, the three guards |
 | `docs/BUS.md` | The dual-rail bus: streams, single-writer storage, ACK discipline, heartbeats, self-heal layers |
 | `docs/GOVERNANCE.md` | Leader/follower canon, risk tiers, remote human approval, scoped authorization relay |
+| `docs/EVALS.md` | Reproduce our numbers: one-command demo, per-step latency, 0-token core, honest limits |
+| `docs/FAILURE-MODES.md` | Every known failure, its root cause, the guard, and a link to the exact code |
+| `demo/demo.py` | The one-command reproducible demo (5 scenarios, self-checking, offline) |
 | `reference/consensus.py` | The consensus engine (stdlib-only Python, append-only JSONL ledger) |
 | `reference/machine_bus.py` | The file-rail mailbox with capability addressing and auto-failover |
 | `reference/bus_send.py` | The dual-send gate: the ONE entry point for every machine-to-machine message |
@@ -51,6 +54,30 @@ Your own Claude Code will maintain this better than any human: point it at this 
 | `docs/the-machines-learned-to-negotiate.md` | The launch story |
 
 Everything is stdlib-only Python. No packages, no server, no database. If you can run `python`, you can run the whole thing. Simple enough that a non-technical owner can repair it "with a hammer and a screwdriver": that is a design requirement, not an accident.
+
+## Reproduce our numbers
+
+We would rather you check than trust. One command runs a full negotiation on your
+own machine and self-checks every outcome:
+
+```bash
+python demo/demo.py
+```
+
+No arguments, no network, no packages, no API key. It runs the published
+`reference/consensus.py`, simulates two machines on one host, and drives five
+scenarios: the happy path (`propose -> counter -> accept -> commit -> verify x2`),
+the Tier-2 human gate refusing to auto-commit, the tripwire force-bumping a
+mislabelled dangerous action, split-brain caught on partition-heal, and a corrupt
+ledger line that does not eat the events after it. Exit code is `0` only if every
+end-state is correct, so the demo is also the integration test.
+
+The honest headline it prints: **the consensus engine makes 0 LLM calls and spends
+0 tokens** - it is deterministic file I/O, sub-millisecond per decision. The only
+LLM work in the system (propose, counter, judge content) lives in the *agent*
+above this engine, not inside it. Full method, per-step timings, and the limits of
+what these numbers mean are in [docs/EVALS.md](docs/EVALS.md); every known way it
+breaks is in [docs/FAILURE-MODES.md](docs/FAILURE-MODES.md).
 
 ## Battle scars included
 
