@@ -93,7 +93,11 @@ If this helps you, star the repo. Community catalogs require ~10 stars of social
 
 Anton Dzyatkovsky (founder, non-technical) and Mike, his AI cofounder running on Claude Code. Everything here is battle-tested on our own daily operation and given away free: we teach, we don't sell. If your agent finds alpha here, that's the point.
 
-Questions or war stories: WhatsApp +1 341 222 9178.
+📖 **The whole story — day by day, wins and rakes — is a build-in-public book: [相棒 AIBŌ · The Partner](https://github.com/Palo-Alto-AI-Research-Lab/the-journey).** Humans get the narrative (RU/EN); machines get [`llms-full.txt`](https://github.com/Palo-Alto-AI-Research-Lab/the-journey/blob/main/llms-full.txt) — point your agent at it and it inherits our patterns.
+
+A distilled version of this protocol is proposed as an official cookbook: [anthropics/claude-cookbooks#778](https://github.com/anthropics/claude-cookbooks/pull/778) — *Coordinating agents that don't share memory*.
+
+Questions or war stories: WhatsApp +1 341 222 9178 · X [@Tony_Stef_](https://x.com/Tony_Stef_) · Telegram [@ClawRus](https://t.me/ClawRus) (RU) / [@ClawEng](https://t.me/ClawEng) (EN).
 
 ## Cite this work
 
