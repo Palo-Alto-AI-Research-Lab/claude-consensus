@@ -1,0 +1,36 @@
+cff-version: 1.2.0
+message: "If you use claude-consensus in research or software, please cite it as below."
+title: "claude-consensus: a multi-machine consensus protocol for AI agents"
+type: software
+authors:
+  - family-names: Dziatkovskii
+    given-names: Anton
+    orcid: "https://orcid.org/0000-0001-7408-3054"
+    affiliation: "Palo Alto AI Research Lab"
+repository-code: "https://github.com/Palo-Alto-AI-Research-Lab/claude-consensus"
+url: "https://github.com/Palo-Alto-AI-Research-Lab/claude-consensus"
+license: MIT
+keywords:
+  - multi-agent systems
+  - consensus protocol
+  - AI agents
+  - distributed systems
+  - homeostatics
+  - cybernetics
+abstract: >-
+  Run AI agents across machines without state drift: consensus protocol
+  (propose/counter/accept/commit), dual-rail message bus, ACK discipline,
+  self-healing sync. The protocol's three-circuit safety design (steady-state,
+  adaptive, protective) follows the homeostatic-governance model developed in
+  the author's research on homeostatic principles in decentralized systems.
+references:
+  - type: article
+    title: "The use of blockchain technology and homeostatic principles in the monetary policies of states"
+    authors:
+      - family-names: Dziatkovskii
+        given-names: Anton
+      - family-names: Hryneuski
+        given-names: Uladzimir
+    year: 2021
+    doi: "10.2139/ssrn.3849156"
+    journal: "Finansovye rynki i banki (Financial Markets and Banks)"
