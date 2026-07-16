@@ -1,0 +1,297 @@
+{
+  "python": "3.12.10",
+  "engine": "reference\\consensus.py",
+  "core_compute": "50 proposals / 250 events, merge+derive-all: 1717.8 microseconds/pass",
+  "scenarios": [
+    {
+      "name": "A happy-path",
+      "pass": true,
+      "total_ms": 999.8,
+      "steps": [
+        {
+          "machine": "LAPTOP-2",
+          "verb": "propose",
+          "args": [
+            "propose",
+            "adopt nightly reindex at 03:30",
+            "--tier",
+            "0"
+          ],
+          "ms": 242.0,
+          "exit": 0,
+          "out": "PROPOSED #7c5e41f4 tier=0: adopt nightly reindex at 03:30\n   (bus skipped: CONSENSUS_NO_BUS)"
+        },
+        {
+          "machine": "HUB-1",
+          "verb": "respond",
+          "args": [
+            "respond",
+            "7c5e41f4",
+            "counter",
+            "agree, but run it at 04:00 to miss the backup window"
+          ],
+          "ms": 152.7,
+          "exit": 0,
+          "out": "COUNTER #7c5e41f4: agree, but run it at 04:00 to miss the backup window\n   (bus skipped: CONSENSUS_NO_BUS)"
+        },
+        {
+          "machine": "LAPTOP-2",
+          "verb": "respond",
+          "args": [
+            "respond",
+            "7c5e41f4",
+            "accept",
+            "04:00 works"
+          ],
+          "ms": 154.3,
+          "exit": 0,
+          "out": "ACCEPT #7c5e41f4: 04:00 works\n   (bus skipped: CONSENSUS_NO_BUS)"
+        },
+        {
+          "machine": "HUB-1",
+          "verb": "commit",
+          "args": [
+            "commit",
+            "7c5e41f4"
+          ],
+          "ms": 149.8,
+          "exit": 0,
+          "out": "COMMITTED #7c5e41f4: adopt nightly reindex at 03:30  (now APPLY the change, then `verify`)\n   (bus skipped: CONSENSUS_NO_BUS)"
+        },
+        {
+          "machine": "HUB-1",
+          "verb": "verify",
+          "args": [
+            "verify",
+            "7c5e41f4",
+            "cron installed on hub, next run 04:00"
+          ],
+          "ms": 154.0,
+          "exit": 0,
+          "out": "note: you COMMITTED #7c5e41f4 -> this is a SELF-verify; still needs an INDEPENDENT machine's verify.\nVERIFY #7c5e41f4 by HUB-1: cron installed on hub, next run 04:00\n   (bus skipped: CONSENSUS_NO_BUS)"
+        },
+        {
+          "machine": "LAPTOP-2",
+          "verb": "verify",
+          "args": [
+            "verify",
+            "7c5e41f4",
+            "confirmed cron present from laptop, independent check"
+          ],
+          "ms": 147.0,
+          "exit": 0,
+          "out": "VERIFY #7c5e41f4 by LAPTOP-2: confirmed cron present from laptop, independent check\n   (bus skipped: CONSENSUS_NO_BUS)\n   cross-agent validation complete (>=2 distinct, >=1 independent of the applier) -> globally done."
+        }
+      ]
+    },
+    {
+      "name": "B human-gate",
+      "pass": true,
+      "total_ms": 769.0,
+      "steps": [
+        {
+          "machine": "HUB-1",
+          "verb": "propose",
+          "args": [
+            "propose",
+            "rotate the production API token",
+            "--tier",
+            "2"
+          ],
+          "ms": 154.3,
+          "exit": 0,
+          "out": "PROPOSED #41b58d48 tier=2: rotate the production API token\n   (bus skipped: CONSENSUS_NO_BUS)\n   (bus skipped: CONSENSUS_NO_BUS)\n   Tier-2 -> escalated to the human owner (no auto-commit)."
+        },
+        {
+          "machine": "HUB-1",
+          "verb": "commit",
+          "args": [
+            "commit",
+            "41b58d48"
+          ],
+          "ms": 167.4,
+          "exit": 1,
+          "out": "REFUSED: Tier-2 needs a RECORDED human approval first -> `approve <id> \"<proof>\"`; auto-commit stays banned."
+        },
+        {
+          "machine": "HUB-1",
+          "verb": "approve",
+          "args": [
+            "approve",
+            "41b58d48",
+            "owner approved, alerts-channel msg 1790183"
+          ],
+          "ms": 143.4,
+          "exit": 0,
+          "out": "HUMAN-APPROVED #41b58d48: owner approved, alerts-channel msg 1790183\n   (bus skipped: CONSENSUS_NO_BUS)"
+        },
+        {
+          "machine": "HUB-1",
+          "verb": "commit",
+          "args": [
+            "commit",
+            "41b58d48"
+          ],
+          "ms": 150.3,
+          "exit": 0,
+          "out": "COMMITTED #41b58d48: rotate the production API token  (now APPLY the change, then `verify`)\n   (bus skipped: CONSENSUS_NO_BUS)"
+        },
+        {
+          "machine": "HUB-1",
+          "verb": "verify",
+          "args": [
+            "verify",
+            "41b58d48",
+            "token rotated, old key revoked"
+          ],
+          "ms": 153.6,
+          "exit": 0,
+          "out": "note: you COMMITTED #41b58d48 -> this is a SELF-verify; still needs an INDEPENDENT machine's verify.\nVERIFY #41b58d48 by HUB-1: token rotated, old key revoked\n   (bus skipped: CONSENSUS_NO_BUS)"
+        }
+      ]
+    },
+    {
+      "name": "C tripwire",
+      "pass": true,
+      "total_ms": 309.0,
+      "steps": [
+        {
+          "machine": "HUB-1",
+          "verb": "propose",
+          "args": [
+            "propose",
+            "delete the archived leads table",
+            "--tier",
+            "0"
+          ],
+          "ms": 146.0,
+          "exit": 0,
+          "out": "⚠️ TIER-TRIPWIRE: matched 'delete' -> bumping tier 0->2 (safety gate; tune tier_tripwire.txt)\nPROPOSED #605439f4 tier=2: delete the archived leads table\n   (bus skipped: CONSENSUS_NO_BUS)\n   (bus skipped: CONSENSUS_NO_BUS)\n   Tier-2 -> escalated to the human owner (no auto-commit)."
+        },
+        {
+          "machine": "HUB-1",
+          "verb": "status",
+          "args": [
+            "status",
+            "605439f4"
+          ],
+          "ms": 163.0,
+          "exit": 0,
+          "out": "#605439f4  [ESCALATED]  tier=2  rounds=1  by HUB-1\n   subject: delete the archived leads table\n   timeline:\n     2026-07-16T12:11:42.670365Z  PROPOSE   HUB-1            delete the archived leads table\n     2026-07-16T12:11:42.674354Z  ESCALATE  HUB-1            Tier-2 proposal needs the owner's OK"
+        }
+      ]
+    },
+    {
+      "name": "D split-brain",
+      "pass": true,
+      "total_ms": 782.0,
+      "steps": [
+        {
+          "machine": "HUB-1",
+          "verb": "propose",
+          "args": [
+            "propose",
+            "switch embeddings backend to model-large",
+            "--tier",
+            "0"
+          ],
+          "ms": 146.7,
+          "exit": 0,
+          "out": "PROPOSED #ce327093 tier=0: switch embeddings backend to model-large\n   (bus skipped: CONSENSUS_NO_BUS)"
+        },
+        {
+          "machine": "LAPTOP-2",
+          "verb": "respond",
+          "args": [
+            "respond",
+            "ce327093",
+            "accept",
+            "agreed"
+          ],
+          "ms": 180.4,
+          "exit": 0,
+          "out": "ACCEPT #ce327093: agreed\n   (bus skipped: CONSENSUS_NO_BUS)"
+        },
+        {
+          "machine": "HUB-1",
+          "verb": "commit",
+          "ms": 146.9,
+          "exit": 0,
+          "out": "COMMIT on hub island (partitioned)"
+        },
+        {
+          "machine": "LAPTOP-2",
+          "verb": "commit",
+          "ms": 148.0,
+          "exit": 0,
+          "out": "COMMIT on laptop island (partitioned)"
+        },
+        {
+          "machine": "HUB-1",
+          "verb": "tick",
+          "args": [
+            "tick"
+          ],
+          "ms": 160.0,
+          "exit": 0,
+          "out": "#ce327093 SPLIT-BRAIN: committed by HUB-1, LAPTOP-2 -> escalate for reconciliation\n   (bus skipped: CONSENSUS_NO_BUS)"
+        }
+      ]
+    },
+    {
+      "name": "E corrupt-line",
+      "pass": true,
+      "total_ms": 656.5,
+      "steps": [
+        {
+          "machine": "HUB-1",
+          "verb": "propose",
+          "args": [
+            "propose",
+            "add a health dashboard tile",
+            "--tier",
+            "0"
+          ],
+          "ms": 143.4,
+          "exit": 0,
+          "out": "PROPOSED #8040f771 tier=0: add a health dashboard tile\n   (bus skipped: CONSENSUS_NO_BUS)"
+        },
+        {
+          "machine": "LAPTOP-2",
+          "verb": "respond",
+          "args": [
+            "respond",
+            "8040f771",
+            "accept",
+            "ok"
+          ],
+          "ms": 160.8,
+          "exit": 0,
+          "out": "ACCEPT #8040f771: ok\n   (bus skipped: CONSENSUS_NO_BUS)"
+        },
+        {
+          "machine": "HUB-1",
+          "verb": "commit",
+          "args": [
+            "commit",
+            "8040f771"
+          ],
+          "ms": 182.6,
+          "exit": 0,
+          "out": "COMMITTED #8040f771: add a health dashboard tile  (now APPLY the change, then `verify`)\n   (bus skipped: CONSENSUS_NO_BUS)"
+        },
+        {
+          "machine": "HUB-1",
+          "verb": "status",
+          "args": [
+            "status",
+            "8040f771"
+          ],
+          "ms": 169.7,
+          "exit": 0,
+          "out": "#8040f771  [COMMITTED]  tier=0  rounds=1  by HUB-1\n   subject: add a health dashboard tile\n   accepts: LAPTOP-2\n   timeline:\n     2026-07-16T12:11:43.809183Z  PROPOSE   HUB-1            add a health dashboard tile\n     2026-07-16T12:11:43.969851Z  ACCEPT    LAPTOP-2         ok\n     2026-07-16T12:11:44.153898Z  COMMIT    HUB-1            decision of record; applying"
+        }
+      ]
+    }
+  ]
+}
