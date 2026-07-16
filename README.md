@@ -6,6 +6,8 @@ This is the multi-machine coordination layer extracted from a real working syste
 
 Part of the same family as [claude-bible](https://github.com/Palo-Alto-AI-Research-Lab/claude-bible) (the governance codex). The Bible is the law; this repo is the diplomacy.
 
+**Evaluating this work?** [START-HERE.md](START-HERE.md) is the one-page map: the 15-minute verification, the full repo family, the book, and the method.
+
 ## The problem this solves
 
 Run Claude Code (or any agent) on more than one computer and you hit the same four walls:
