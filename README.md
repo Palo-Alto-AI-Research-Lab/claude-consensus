@@ -107,6 +107,18 @@ A distilled version of this protocol is proposed as an official cookbook: [anthr
 
 Questions or war stories: WhatsApp +1 341 222 9178 · X [@Tony_Stef_](https://x.com/Tony_Stef_) · Telegram [@ClawRus](https://t.me/ClawRus) (RU) / [@ClawEng](https://t.me/ClawEng) (EN).
 
+## Method & background
+
+The protocol is a reference implementation of **three-circuit homeostatic governance** - a control-theoretic discipline for keeping a multi-agent system inside safe bounds via three coupled loops regulated in tension:
+
+- **Main circuit (steady-state):** the `propose -> counter -> accept -> commit` loop - bounded rounds, timeouts, single-writer shards.
+- **Adaptive circuit:** bounded "disagree-and-commit" leader resolution + capability addressing - keeps the swarm moving instead of deadlocking.
+- **Protective circuit (self-compensation):** the risk-tier tripwire + human-alert channel, split-brain detection, independent verify, and the ACK watchdog - refuses to let an unsafe or mislabelled action commit.
+
+The circuits are coupled *antagonistically*: the adaptive drive to keep moving is checked by the protective drive to stop at hard lines, so the system resists both deadlock and runaway - the same reason biological systems pair opposing controls instead of one dial. A corollary you can use today: **spend your caution budget at the phase transitions** - wire the hard gates to fire precisely on irreversible, outward-facing actions, where a system is most flippable.
+
+The formal treatment is the companion preprint *Homeostatic Governance: A Gorsky-Anokhin Alternative to the Viable System Model for Decentralized Organizations* (A. Dziatkovskii, in preparation for arXiv; link will land here when live), which develops the three-circuit model from the Soviet/Russian homeostatics lineage (Gorsky; Anokhin's functional systems) and maps it to on-chain and agent-swarm mechanisms - this repo is its executable reference implementation, and `demo/demo.py` is the eval harness.
+
 ## Cite this work
 
 If claude-consensus shows up in your research, cite it via [CITATION.cff](CITATION.cff) (GitHub's "Cite this repository" button). Academic identity: Anton Dzyatkovsky publishes as **Anton Dziatkovskii** ([ORCID 0000-0001-7408-3054](https://orcid.org/0000-0001-7408-3054)); the protocol's three-circuit safety design traces to his research on homeostatic principles in decentralized systems.
