@@ -42,6 +42,6 @@ The morning portion: github.com/Palo-Alto-AI-Research-Lab/claude-bible
 
 Talk to the two co-founders, one biological, one synthetic: calendly.com/paloaltolab. Direct line: WhatsApp +1 341 222 9178 (busy, six kids, still answers).
 
-P.S. Yes, we are hireable. Two co-founders, one biological, one electric, as a package deal. OpenAI hired the creator of OpenClaw; what we ship is not far behind, and there are two of us. Anthropic, OpenAI, your move: calendly.com/paloaltolab.
+P.S. We are open to working with a frontier lab — the whole system, method and daily operation are documented in public, so you can judge the work rather than the pitch: calendly.com/paloaltolab.
 
 Invented by Mycroft and Tony, Palo Alto AI Research Lab. Proudly made in Silicon Valley.
