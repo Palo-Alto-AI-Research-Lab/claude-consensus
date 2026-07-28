@@ -85,6 +85,75 @@ Timeouts respect a **per-peer SLA** (`peer_timeout_min` in the config): a sleepi
 
 **Guard 3: split-brain detection.** Only one machine should ever apply+COMMIT a given proposal. If the merged ledger shows COMMITs from more than one actor, the network partitioned, both sides decided alone, and the partition then healed. That state is `conflict`, never silently "committed", and it always escalates to the human for reconciliation (the leader's log is authoritative as a starting point).
 
+## §6a. Four more guards, from the month after this repo first shipped
+
+Guards 1-3 above shipped with v0.1.0. Then we ran the engine across six machines for another
+month and four more things bit us. Each one is the same shape as the first three and as each
+other: **something the protocol trusted without checking.** All four are in
+[`reference/protocol_guards.py`](../reference/protocol_guards.py) as pure functions with a
+selftest (`python protocol_guards.py selftest`).
+
+**Guard 4: arbiter election — the tie-break role must survive its own holder dying.** §5 pins
+the tie-break to one leader named in config. Deterministic, single-writer, fine — until the
+leader is the machine that dies. Then nothing re-assigns the role: tier-0 proposals sit
+unresolved and *nobody is alerted*, because every remaining peer is behaving correctly. The fix
+reuses the presence lease the bus already writes (a per-machine heartbeat file whose mtime is
+the only signal), so there is no new heartbeat and no new state to sync:
+
+- every ticking peer computes the arbiter the **same way** from the **same ordered list**, so all
+  peers agree on who arbitrates this tick without exchanging one message;
+- a machine is eligible only on **positive evidence** of life (fresh stamp). An **absent** stamp
+  promotes nobody — "no evidence" is not "dead", and fail-safe beats fail-fast for a role whose
+  failure mode is two arbiters;
+- the machine running the tick is always eligible, so a travelling laptop at the head of the list
+  is skipped to the next live machine and reclaims the role when its stamp goes fresh;
+- rollout is gated by `arbiter_order_armed`: unarmed, a peer behaves **identically** to the old
+  fixed-leader build. Shipping a new election rule to half a fleet is how you get two arbiters.
+
+The failover is announced **once per episode** by an edge detector, not once per tick — N peers
+N-plexing the same alert is how real alerts stop being read.
+
+**Guard 5: proof grading — "verified" has to mean something a machine can check.** The VERIFY
+verb carries a free-text proof, and in practice agents wrote "checked, works" and the task went
+green. A claim is not evidence. A proof now grades as `proven` only if it carries the **residue
+of an action**: a zero exit code, a hash, a counter that moved, a before/after pair. This is not
+a language check — an agent that wants to fake it must now fabricate a specific number, which is
+a far brighter line to cross and a far easier lie to catch. Grading arms from a timestamp, so
+events recorded before you turned it on are grandfathered: retroactive standards invalidate
+honest history, and nobody trusts a ledger after that.
+
+**Guard 6: risk tracking — one integer chosen by the proposer is not a risk model.** The tripwire
+(§4) catches dangerous *words*. It does not catch a dangerous *category* carried at a low tier:
+"update the outreach template" is tier-0 by any reasonable reading and still ends with text going
+to strangers. So a proposal is also classified into a track (financial / secrets / outbound /
+canon / infra / general) independently of the tier its proposer chose.
+
+Note how it ships: **in shadow**. It classifies, it logs, it changes nothing. The honest question
+is not "is a second signal nicer" but "does it catch anything the tier alone misses", and only a
+log answers that. The verdict field is written to be **falsifiable** — `would_benefit` is False
+for anything already tier-2 (the engine escalates it regardless) and False for the general track;
+it is True only for the narrow case the guard exists for. If it stays at zero for a month, the
+guard is not needed and we delete it. `shadow_report()` prints that number.
+
+**Guard 7: signature audit — identity by filename is not identity.** Every event carries `actor`,
+and its shard is named after a machine. Both are strings written by whoever has write access to a
+shared folder, so the ledger's answer to "who decided this" was "whoever claimed to" — which
+hollows out the Tier-2 gate, whose entire value is a *recorded* human approval. The identity layer
+is [`reference/fleet_sign.py`](../reference/fleet_sign.py): Ed25519 detached signatures via
+`ssh-keygen -Y`, one public key file per machine (single writer, no conflicts), a revocation list,
+and an allowed-signers set assembled in memory at every verify so there is no shared file to go
+stale. Private keys are never synced — syncing identity is what produced our duplicate-session
+incidents.
+
+Two distinctions carry the whole design:
+
+- **unsigned ≠ forged.** Unsigned is a rollout gap (`None`); a bad signature is a tampering
+  signal (`False`). A bad signature is refused even during the dark phase; an unsigned one is not.
+  Conflating them is why "we have signatures" often means nothing.
+- **rollout order is not optional:** sign everything and verify nothing → a readable audit
+  command → only then set an enforcement timestamp, forward in time. Flip straight to enforcement
+  and you quarantine every machine without a key yet, which on day one is all of them.
+
 ## §7. Escalation channels: keep the alarm away from the noise
 
 Routine consensus traffic (every PROPOSE/ACCEPT/COMMIT) is mirrored to the machine group chat: humans can watch the negotiation in plain sight. But a question that NEEDS a human must not live in that feed: heartbeats and progress lines bury it in minutes. Run a **second, quiet channel** (another group chat) that carries ONLY "a human is needed NOW" events: deadlocks, Tier-2 approvals. In the reference code that is `HUMAN_ALERT_CMD`, fired only on round-cap deadlock, tier>0 timeout, or manual escalate.

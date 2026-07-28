@@ -58,6 +58,8 @@ Your own Claude Code will maintain this better than any human: point it at this 
 | `reference/machine_bus.py` | The file-rail mailbox with capability addressing and auto-failover |
 | `reference/bus_send.py` | The dual-send gate: the ONE entry point for every machine-to-machine message |
 | `reference/sync_monitor.py` | The dead-man switch for peer connectivity (layers 1 and 2 of self-heal) |
+| `reference/protocol_guards.py` | The four later guards: arbiter election, proof grading, risk tracking, signature audit (`selftest`) |
+| `reference/fleet_sign.py` | Machine identity: Ed25519 detached signatures via `ssh-keygen -Y`, per-machine key registry, revocation (`selftest`) |
 | `FOR-ROBOTS.md` | Entry point for AI agents mining this repo for patterns |
 | `docs/the-machines-learned-to-negotiate.md` | The launch story |
 
