@@ -95,13 +95,32 @@ The reference code is not a clean-room demo. It is our live implementation, sani
 
 ## Versioning and roadmap
 
-Maintained like our own system: small commits daily, a versioned release with a changelog twice a week (Mon & Thu). See [CHANGELOG.md](CHANGELOG.md) for what shipped. The family roadmap lives in [claude-bible/ROADMAP.md](https://github.com/Palo-Alto-AI-Research-Lab/claude-bible/blob/main/ROADMAP.md); this repo is pain #5 shipped.
+Maintained like our own system: small commits daily, and **every noticeable change ships as a new
+release**. (It used to say "a release twice a week, Mon & Thu" — v0.2.0 was written on 28 July and
+had no tag until 4 August, so the calendar promise was replaced by one tied to the work.)
+
+**Now — [v0.2.1](https://github.com/Palo-Alto-AI-Research-Lab/claude-consensus/releases).** The
+protocol, the dual-rail bus, ACK discipline, leader/follower canon, self-healing sync, the
+stdlib-only reference implementation, seven guards, and the preprint.
+
+**Next:**
+
+- **A guard for the failure we have not covered yet** — every guard here started as something the
+  protocol trusted without checking, and the list is written from incidents, not from imagination.
+- **Numbers from a fleet that is not ours.** All the measurements in here come from six machines we
+  own. That is a reference implementation, not an independent result.
+- **Reproduction that does not need our topology** — `demo/` runs, but the interesting failures
+  need more than one box.
+
+See [CHANGELOG.md](CHANGELOG.md) for what shipped when. The family roadmap lives in
+[claude-bible/ROADMAP.md](https://github.com/Palo-Alto-AI-Research-Lab/claude-bible/blob/main/ROADMAP.md);
+this repo is pain #5 shipped.
 
 If this helps you, star the repo. Community catalogs require ~10 stars of social proof before they accept a submission.
 
 ## Who made this
 
-Anton Dzyatkovsky (founder, non-technical) and Mike, his AI cofounder running on Claude Code. Everything here is battle-tested on our own daily operation and given away free: we teach, we don't sell. If your agent finds alpha here, that's the point.
+Anton Dziatkovskii (founder, non-technical) and Mike, his AI cofounder running on Claude Code. Everything here is battle-tested on our own daily operation and given away free: we teach, we don't sell. If your agent finds alpha here, that's the point.
 
 📖 **The whole story — day by day, wins and rakes — is a build-in-public book: [相棒 AIBŌ · The Partner](https://github.com/Palo-Alto-AI-Research-Lab/the-journey).** Humans get the narrative (RU/EN); machines get [`llms-full.txt`](https://github.com/Palo-Alto-AI-Research-Lab/the-journey/blob/main/llms-full.txt) — point your agent at it and it inherits our patterns.
 

@@ -1,6 +1,20 @@
 # Changelog
 
-All notable changes to this project. Release cadence: twice a week (Mon & Thu), small commits land daily as work happens. Format: what shipped, in plain words.
+All notable changes to this project. Small commits land daily as work happens; **every noticeable
+change ships as a release**. (This line used to promise a release twice a week; v0.2.0 below was
+written on 2026-07-28 and carried no tag until 2026-08-04, so the promise was replaced with a rule
+tied to the work.) Format: what shipped, in plain words.
+
+## v0.2.1 - 2026-08-04
+
+Contribution plumbing, no protocol change.
+
+- `AGENTS.md` — the five invariants ordered by what they cost to break, so a change that touches one
+  knows what it is risking.
+- The contributor deal inherited from one org-wide `CONTRIBUTING.md` instead of a local copy that
+  silently shadowed it; the lab-wide AI-contributor credit policy; changelog categories for
+  auto-generated release notes.
+- `v0.2.0` was tagged on this date too — it was written a week earlier and never cut.
 
 ## v0.2.0 - 2026-07-28
 
